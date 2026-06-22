@@ -29,6 +29,7 @@
     <title>StrideMap</title>
   </head>
   <body>
+    <div class="notifications"></div>
     <div class="sidebar">
       <img src="assets/logo.png" alt="Logo" class="logo" />
       <div class="list-actions hidden">
@@ -167,5 +168,15 @@
     </div>
 
     <div id="map"></div>
+    <div class="modal hidden">
+      <button class="close-modal">&times;</button>
+      <h1 class="modal-title"></h1>
+      <p class="modal-description"></p>
+      <div class="modal-btns">
+        <button class="btn-modal btn-confirm">Confirm</button>
+        <button class="btn-modal btn-cancel">Cancel</button>
+      </div>
+    </div>
+    <div class="overlay hidden"></div>
   </body>
 </html>

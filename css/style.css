@@ -405,3 +405,159 @@ a:visited {
 .popup-highlighted-running .leaflet-popup-tip {
   background-color: var(--color-brand--2);
 }
+
+/*Notifications*/
+.notifications {
+  position: fixed;
+  top: 2rem;
+  right: 2rem;
+
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+
+  z-index: 9999;
+}
+
+.notification {
+  min-width: 28rem;
+  padding: 1.2rem 1.6rem;
+  border-radius: 8px;
+
+  color: white;
+  font-size: 1.4rem;
+  font-weight: 600;
+
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+
+  transform: translateX(120%);
+  opacity: 0;
+
+  animation: slideIn 0.3s ease forwards;
+}
+
+.notification--success {
+  background: #00c46a;
+}
+
+.notification--error {
+  background: #e74c3c;
+}
+
+.notification--info {
+  background: #3498db;
+}
+
+.notification--warning {
+  background: #f39c12;
+}
+
+.notification.hide {
+  animation: slideOut 0.3s ease forwards;
+}
+
+@keyframes slideIn {
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideOut {
+  to {
+    transform: translateX(120%);
+    opacity: 0;
+  }
+}
+
+/*MODAL*/
+
+.close-modal {
+  position: absolute;
+  top: 1.2rem;
+  right: 2rem;
+  font-size: 5rem;
+  color: #333;
+  cursor: pointer;
+  border: none;
+  background: none;
+}
+
+.modal h1 {
+  font-size: 2.5rem;
+  margin-bottom: 2rem;
+}
+
+.modal p {
+  font-size: 1.8rem;
+}
+
+/* -------------------------- */
+/* CLASSES TO MAKE MODAL WORK */
+.hidden {
+  display: none;
+}
+
+.modal {
+  position: fixed;
+  z-index: 10001;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 30%;
+  color: #333;
+
+  background-color: white;
+  padding: 6rem;
+  border-radius: 5px;
+  box-shadow: 0 3rem 5rem rgba(0, 0, 0, 0.3);
+}
+
+.overlay {
+  position: fixed;
+  z-index: 10000;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(3px);
+}
+
+.modal-btns {
+  margin-top: 2em;
+  display: flex;
+  gap: 3em;
+}
+
+.btn-modal {
+  border: none;
+  border-radius: 5px;
+  padding: 1.3rem;
+
+  color: var(--color-light--2);
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.btn-modal.btn-confirm {
+  background-color: #00c46a;
+}
+
+.btn-modal.btn-cancel {
+  background-color: #e74c3c;
+}
+
+.btn-modal:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.1);
+}
+
+.btn-modal {
+  transition: all 0.2s ease;
+}
+
+.drawing-mode .workout__btn {
+  pointer-events: none;
+  opacity: 0.4;
+}

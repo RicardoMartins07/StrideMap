@@ -15,6 +15,13 @@ const drawPanel = document.querySelector('.draw-panel');
 const actionsPanel = document.querySelector('.draw-panel__actions');
 const btnFinishRoute = document.querySelector('.btn-finish-route');
 const firstPanel = document.querySelector('.first-panel');
+const modal = document.querySelector('.modal');
+const overlay = document.querySelector('.overlay');
+const btnCloseModal = document.querySelector('.close-modal');
+const btnsOpenModal = document.querySelector('.show-modal');
+const modalTitle = document.querySelector('.modal-title');
+const modalDesc = document.querySelector('.modal-description');
+const btnModals = document.querySelector('.modal-btns');
 
 class Workout {
   date = new Date();
@@ -76,6 +83,7 @@ class App {
   #selectedWorkoutID = null;
   #selectedMarker;
   #sortOn = false;
+  #confirmResolver = null;
 
   constructor() {
     this._getPosition();
@@ -110,6 +118,10 @@ class App {
     actionsPanel.addEventListener('click', this._btnActionsPanel.bind(this));
 
     this._toggleListActions();
+
+    btnCloseModal.addEventListener('click', this._closeModal);
+    overlay.addEventListener('click', this._closeModal);
+    btnModals.addEventListener('click', this._handleModal.bind(this));
   }
 
   _toggleListActions() {
@@ -120,11 +132,8 @@ class App {
   _getPosition() {
     // GeoLocation API
     if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        this._loadMap.bind(this),
-        function () {
-          alert('Could not get your position...');
-        },
+      navigator.geolocation.getCurrentPosition(this._loadMap.bind(this), () =>
+        this._showNotification('Could Not get your location...', 'error'),
       );
     }
   }
@@ -154,7 +163,7 @@ class App {
   }
 
   _showForm(mapE) {
-    if (this.#drawingMode) return;
+    if (this.#drawingMode || this.#editMode) return;
     this._clearPolyline();
     this.#mapEvent = mapE;
     form.classList.remove('hidden');
@@ -162,22 +171,16 @@ class App {
   }
 
   _hideForm() {
-    //Clear Input fields
     inputDistance.value =
       inputDuration.value =
       inputCadence.value =
       inputElevation.value =
         '';
 
-    form.style.display = 'none';
     form.classList.add('hidden');
+    form.style.display = 'grid';
 
-    setTimeout(() => (form.style.display = 'grid'), 1000);
-    if (this.#editMode) {
-      document
-        .querySelectorAll('.workout--editing')
-        .forEach(el => el.classList.remove('workout--editing'));
-    }
+    this._clearTransientUI();
   }
 
   _toggleElevationField(type) {
@@ -213,7 +216,10 @@ class App {
         !validInputs(cadence, duration, distance) ||
         !allPositive(duration, distance, cadence)
       )
-        return alert('Inputs have to be positive numbers!');
+        return this._showNotification(
+          'Inputs have to be positive numbers!',
+          'error',
+        );
 
       data = {
         type,
@@ -239,8 +245,10 @@ class App {
     }
 
     if (this.#editMode) {
+      this.#drawnRoute = [];
       this._editWorkout(this.#editingWorkout.id, data);
-      this.#editMode = false;
+      this._clearTransientUI();
+      return;
     } else if (this.#drawnRoute.length !== 0) {
       data.route = this.#drawnRoute.slice();
       data.coords = [this.#drawnRoute[0][0], this.#drawnRoute[0][1]];
@@ -317,6 +325,7 @@ class App {
 
     this._hideForm();
     this._saveWorkouts();
+    this._showNotification('Workout created successfully', 'success');
   }
 
   _renderWorkoutMarker(workout) {
@@ -445,13 +454,21 @@ class App {
     }).addTo(this.#map);
   }
 
-  _workoutActions(e) {
+  _workoutActions = async e => {
+    if (this.#drawingMode) return;
     const deleteBtn = e.target.closest('.workout__btn--delete');
     const editBtn = e.target.closest('.workout__btn--edit');
 
     const workoutEl = e.target.closest('.workout');
 
     if (deleteBtn) {
+      const ok = await this._openModal(
+        'Delete Workout',
+        'Are you sure you want to delete this workout?',
+      );
+
+      if (!ok) return;
+
       const index = this.#workouts.findIndex(
         work => work.id === workoutEl.dataset.id,
       );
@@ -475,6 +492,11 @@ class App {
       workoutEl.remove();
 
       this._saveWorkouts();
+      this._showNotification('Workout deleted!', 'success');
+
+      this.#selectedWorkoutID = null;
+      this._clearMarkerHighlight();
+      this._clearWorkoutHighlights();
     }
 
     if (editBtn) {
@@ -486,7 +508,7 @@ class App {
 
       this._showFormToEdit(workout);
     }
-  }
+  };
 
   _clearWorkoutHighlights() {
     this.#selectedWorkoutID = null;
@@ -539,7 +561,11 @@ class App {
   }
 
   _showFormToEdit(workout) {
-    form.classList.remove('hidden');
+    this._clearTransientUI();
+    this._clearPolyline();
+
+    this.#editMode = true;
+    this.#editingWorkout = workout;
 
     inputDistance.focus();
 
@@ -557,12 +583,15 @@ class App {
     }
   }
 
-  _btnListActions(e) {
+  _btnListActions = async e => {
     const btnDelete = e.target.closest('.btn-delete-all');
     const btnSort = e.target.closest('.btn-sort');
 
     if (btnDelete) {
-      const ok = confirm('Are you sure you want to delete all workouts?');
+      const ok = await this._openModal(
+        'Delete All Workouts',
+        'Are you sure you want to delete all workouts?',
+      );
 
       if (!ok) return;
 
@@ -577,12 +606,13 @@ class App {
       this.#workouts = [];
 
       this._reset();
+      this._showNotification('All Workouts Deleted', 'warning');
     }
     if (btnSort) {
       sortMenu.classList.toggle('hidden');
       this.#sortOn = true;
     }
-  }
+  };
 
   _handleSort(e) {
     const sortType = e.target.dataset.sort;
@@ -639,12 +669,20 @@ class App {
   }
 
   _showDrawPanel() {
+    if (this.#editMode) return;
+
+    this._clearTransientUI();
     this.#drawingMode = true;
-    this._clearPolyline();
+
+    containerWorkouts.classList.add('drawing-mode');
     drawPanel.classList.remove('hidden');
   }
 
   _hideDrawPanel() {
+    this.#drawingMode = false;
+
+    containerWorkouts.classList.remove('drawing-mode');
+
     drawPanel.classList.add('hidden');
   }
 
@@ -676,7 +714,7 @@ class App {
   }
 
   _drawRoute(mapE) {
-    if (!this.#drawingMode) return;
+    if (!this.#drawingMode || this.#editMode) return;
     this.#mapEvent = mapE;
     const { lat, lng } = this.#mapEvent.latlng;
     this.#drawnRoute.push([lat, lng]);
@@ -689,6 +727,28 @@ class App {
     } else {
       this.#currentPolyline.setLatLngs(this.#drawnRoute);
     }
+  }
+
+  _showNotification(message, type = 'info') {
+    const container = document.querySelector('.notifications');
+
+    const html = `
+    <div class="notification notification--${type}">
+      ${message}
+    </div>
+  `;
+
+    container.insertAdjacentHTML('beforeend', html);
+
+    const notification = container.lastElementChild;
+
+    setTimeout(() => {
+      notification.classList.add('hide');
+
+      notification.addEventListener('animationend', () => {
+        notification.remove();
+      });
+    }, 3000);
   }
 
   _saveWorkouts = function () {
@@ -720,7 +780,74 @@ class App {
 
   _reset() {
     localStorage.removeItem('workouts');
-    location.reload();
+
+    this._clearTransientUI();
+
+    this.#workouts = [];
+
+    this.#markers.forEach(marker => this.#map.removeLayer(marker));
+    this.#markers.clear();
+
+    containerWorkouts.innerHTML = '';
+    this._toggleListActions();
+  }
+
+  _openModal(title, description) {
+    modal.classList.remove('hidden');
+    overlay.classList.remove('hidden');
+    modalDesc.textContent = description;
+    modalTitle.textContent = title;
+
+    return new Promise(resolve => {
+      this.#confirmResolver = resolve;
+    });
+  }
+
+  _closeModal() {
+    modal.classList.add('hidden');
+    overlay.classList.add('hidden');
+    modalDesc.textContent = modalTitle.textContent = '';
+  }
+
+  _handleModal(e) {
+    const btnCancel = e.target.closest('.btn-cancel');
+    const btnConfirm = e.target.closest('.btn-confirm');
+
+    if (btnCancel) {
+      this._closeModal();
+      this.#confirmResolver?.(false);
+      this.#confirmResolver = null;
+    }
+
+    if (btnConfirm) {
+      this._closeModal();
+      this.#confirmResolver?.(true);
+      this.#confirmResolver = null;
+    }
+  }
+
+  _clearTransientUI() {
+    // edit
+    this.#editMode = false;
+    this.#editingWorkout = null;
+
+    document
+      .querySelectorAll('.workout--editing')
+      .forEach(el => el.classList.remove('workout--editing'));
+
+    // draw
+    this.#drawingMode = false;
+    this.#drawnRoute = [];
+    this._clearPolyline();
+
+    drawPanel.classList.add('hidden');
+    containerWorkouts.classList.remove('drawing-mode');
+
+    // selection
+    this.#selectedWorkoutID = null;
+
+    // form safety
+    form.classList.add('hidden');
   }
 }
 
