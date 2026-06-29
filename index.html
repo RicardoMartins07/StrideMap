@@ -32,70 +32,88 @@
     <div class="notifications"></div>
     <div class="sidebar">
       <img src="assets/logo.png" alt="Logo" class="logo" />
-      <div class="list-actions hidden">
+      <div class="list-actions">
         <!-- SORT DROPDOWN -->
         <div class="sort-wrapper">
           <button class="action-btn btn-sort">Sort</button>
 
-          <div class="sort-menu hidden">
-            <button class="sort-option" data-sort="date-asc">Date ↑</button>
-
-            <button class="sort-option" data-sort="date-desc">Date ↓</button>
-
-            <button class="sort-option" data-sort="distance-asc">
+          <div class="sort-menu dropdown-menu hidden">
+            <button class="dropdown-option" data-sort="date-asc">Date ↑</button>
+            <button class="dropdown-option" data-sort="date-desc">
+              Date ↓
+            </button>
+            <button class="dropdown-option" data-sort="distance-asc">
               Distance ↑
             </button>
-
-            <button class="sort-option" data-sort="distance-desc">
+            <button class="dropdown-option" data-sort="distance-desc">
               Distance ↓
             </button>
-
-            <button class="sort-option" data-sort="duration-asc">
+            <button class="dropdown-option" data-sort="duration-asc">
               Duration ↑
             </button>
-
-            <button class="sort-option" data-sort="duration-desc">
+            <button class="dropdown-option" data-sort="duration-desc">
               Duration ↓
             </button>
-            <button class="sort-option" data-sort="original">Reset</button>
           </div>
         </div>
-        <button class="action-btn btn-show-all">Show All</button>
-        <button class="action-btn btn-delete-all">Delete All</button>
+        <div class="tools-wrapper">
+          <button class="action-btn btn-tools">Tools</button>
+
+          <div class="tools-menu dropdown-menu hidden">
+            <button class="dropdown-option btn-show-all">Show All</button>
+            <button class="dropdown-option btn-export">Export JSON</button>
+            <button class="dropdown-option btn-import">Import JSON</button>
+            <button class="dropdown-option btn-delete-all">Delete All</button>
+          </div>
+        </div>
       </div>
 
-      <form class="form hidden">
-        <div class="form__row">
-          <label class="form__label">Type</label>
-          <select class="form__input form__input--type">
-            <option value="running">Running</option>
-            <option value="cycling">Cycling</option>
-          </select>
-        </div>
-        <div class="form__row">
-          <label class="form__label">Distance</label>
-          <input class="form__input form__input--distance" placeholder="km" />
-        </div>
-        <div class="form__row">
-          <label class="form__label">Duration</label>
-          <input class="form__input form__input--duration" placeholder="min" />
-        </div>
-        <div class="form__row">
-          <label class="form__label">Cadence</label>
-          <input
-            class="form__input form__input--cadence"
-            placeholder="step/min"
-          />
-        </div>
-        <div class="form__row form__row--hidden">
-          <label class="form__label">Elev Gain</label>
-          <input
-            class="form__input form__input--elevation"
-            placeholder="meters"
-          />
-        </div>
-        <button class="form__btn">OK</button>
-      </form>
+      <div class="modal modal--form hidden">
+        <button class="close-modal">&times;</button>
+
+        <h1 class="modal-title">Add Workout</h1>
+
+        <form class="form form--modal">
+          <div class="form__row">
+            <label class="form__label">Type</label>
+            <select class="form__input form__input--type">
+              <option value="running">Running</option>
+              <option value="cycling">Cycling</option>
+            </select>
+          </div>
+
+          <div class="form__row">
+            <label class="form__label">Distance</label>
+            <input class="form__input form__input--distance" placeholder="km" />
+          </div>
+
+          <div class="form__row">
+            <label class="form__label">Duration</label>
+            <input
+              class="form__input form__input--duration"
+              placeholder="min"
+            />
+          </div>
+
+          <div class="form__row">
+            <label class="form__label">Cadence</label>
+            <input
+              class="form__input form__input--cadence"
+              placeholder="step/min"
+            />
+          </div>
+
+          <div class="form__row form__row--hidden">
+            <label class="form__label">Elev Gain</label>
+            <input
+              class="form__input form__input--elevation"
+              placeholder="meters"
+            />
+          </div>
+
+          <button class="form__btn">Save Workout</button>
+        </form>
+      </div>
 
       <div class="first-panel hidden">
         <h3 class="first-panel__title">No workouts yet</h3>
@@ -103,6 +121,37 @@
           Click on the map to add a workout or use Draw Route to create a custom
           route.
         </p>
+      </div>
+
+      <div class="filter-panel hidden">
+        <button class="filter-btn" data-filter="all">All</button>
+        <button class="filter-btn" data-filter="running">Running</button>
+        <button class="filter-btn" data-filter="cycling">Cycling</button>
+      </div>
+      <div class="stats-panel hidden">
+        <h3 class="stats-panel__title">Your stats</h3>
+
+        <div class="stats-grid">
+          <div class="stats-card">
+            <span class="stats-label">Total workouts</span>
+            <span class="stats-value total-value">0</span>
+          </div>
+
+          <div class="stats-card">
+            <span class="stats-label">Total distance</span>
+            <span class="stats-value km-value">0 km</span>
+          </div>
+
+          <div class="stats-card">
+            <span class="stats-label">Total duration</span>
+            <span class="stats-value duration-value">0 min</span>
+          </div>
+
+          <div class="stats-card">
+            <span class="stats-label">Avg speed/pace</span>
+            <span class="stats-value avg-value">0</span>
+          </div>
+        </div>
       </div>
 
       <div class="draw-panel hidden">
@@ -165,10 +214,16 @@
       </ul>
 
       <button class="action-btn btn-draw-route">Draw Route</button>
+      <input
+        type="file"
+        class="import-input"
+        accept="application/json"
+        hidden
+      />
     </div>
 
     <div id="map"></div>
-    <div class="modal hidden">
+    <div class="modal modal--confirm hidden">
       <button class="close-modal">&times;</button>
       <h1 class="modal-title"></h1>
       <p class="modal-description"></p>
@@ -178,5 +233,6 @@
       </div>
     </div>
     <div class="overlay hidden"></div>
+    <div class="app-mode-indicator hidden"></div>
   </body>
 </html>

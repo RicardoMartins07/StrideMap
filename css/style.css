@@ -115,20 +115,9 @@ a:visited {
 }
 
 .form {
-  background-color: var(--color-dark--2);
-  border-radius: 5px;
-  padding: 1.5rem 2.75rem;
-  margin-bottom: 1.75rem;
-
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0.5rem 2.5rem;
-
-  /* Match height and activity boxes */
-  height: 9.25rem;
-  transition:
-    all 0.5s,
-    transform 1ms;
+  display: flex;
+  flex-direction: column;
+  gap: 1.4rem;
 }
 
 .form.hidden {
@@ -170,8 +159,38 @@ a:visited {
   background-color: #fff;
 }
 
+.modal .form__row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.modal .form__input {
+  width: 100%;
+  padding: 1.2rem 1.4rem;
+  font-size: 1.5rem;
+
+  border-radius: 10px;
+  border: 1px solid transparent;
+
+  background: var(--color-dark--2);
+  color: var(--color-light--2);
+
+  transition: all 0.2s;
+}
+
+.modal .form__input:focus {
+  outline: none;
+  border-color: var(--color-brand--2);
+  box-shadow: 0 0 0 3px rgba(0, 196, 106, 0.15);
+}
+
 .form__btn {
-  display: none;
+  margin-top: 1rem;
+  padding: 1.2rem;
+
+  border-radius: 10px;
+  font-size: 1.4rem;
 }
 
 /* MAP */
@@ -210,20 +229,6 @@ a:visited {
   margin-bottom: 1.5rem;
 }
 
-.action-btn {
-  flex: 1;
-  border: none;
-  border-radius: 5px;
-  padding: 0.8rem;
-  background-color: var(--color-dark--2);
-  color: var(--color-light--2);
-  cursor: pointer;
-  font-family: inherit;
-}
-
-.action-btn:hover {
-  background-color: #50575d;
-}
 .workout__title {
   grid-column: 1 / -1;
 
@@ -269,12 +274,14 @@ a:visited {
 }
 
 .action-btn {
+  flex: 1;
   border: none;
-  background: var(--color-dark--2);
+  border-radius: 5px;
+  padding: 0.8rem;
+  background-color: var(--color-dark--2);
   color: var(--color-light--2);
-  padding: 0.7rem 1rem;
-  border-radius: 8px;
   cursor: pointer;
+  font-family: inherit;
   font-size: 1.3rem;
   transition: all 0.2s;
 }
@@ -282,6 +289,7 @@ a:visited {
 .action-btn:hover {
   transform: translateY(-1px);
   opacity: 0.9;
+  background-color: #50575d;
 }
 
 /*First Panel*/
@@ -313,24 +321,6 @@ a:visited {
 }
 
 /* SORT MENU */
-.sort-wrapper {
-  position: relative;
-}
-
-.sort-menu {
-  position: absolute;
-  top: 110%;
-  left: 0;
-  background: var(--color-dark--1);
-  border-radius: 10px;
-  padding: 0.5rem;
-  width: 18rem;
-  box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.3);
-  display: flex;
-  flex-direction: column;
-  gap: 0.4rem;
-  z-index: 1000;
-}
 
 .sort-menu.hidden {
   display: none;
@@ -492,72 +482,438 @@ a:visited {
   font-size: 1.8rem;
 }
 
-/* -------------------------- */
-/* CLASSES TO MAKE MODAL WORK */
-.hidden {
-  display: none;
-}
-
-.modal {
-  position: fixed;
-  z-index: 10001;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 30%;
-  color: #333;
-
-  background-color: white;
-  padding: 6rem;
-  border-radius: 5px;
-  box-shadow: 0 3rem 5rem rgba(0, 0, 0, 0.3);
-}
-
-.overlay {
-  position: fixed;
-  z-index: 10000;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.6);
-  backdrop-filter: blur(3px);
-}
-
-.modal-btns {
-  margin-top: 2em;
-  display: flex;
-  gap: 3em;
-}
-
-.btn-modal {
-  border: none;
-  border-radius: 5px;
-  padding: 1.3rem;
-
-  color: var(--color-light--2);
-  cursor: pointer;
-  font-family: inherit;
-}
-
-.btn-modal.btn-confirm {
-  background-color: #00c46a;
-}
-
-.btn-modal.btn-cancel {
-  background-color: #e74c3c;
-}
-
-.btn-modal:hover {
-  transform: translateY(-1px);
-  filter: brightness(1.1);
-}
-
-.btn-modal {
-  transition: all 0.2s ease;
-}
-
 .drawing-mode .workout__btn {
   pointer-events: none;
   opacity: 0.4;
+}
+
+/*Stats PANEL*/
+.stats-panel {
+  margin: 1rem 0;
+  padding: 1rem;
+  background: #1e1e1e;
+  border-radius: 10px;
+  color: #fff;
+}
+
+.stats-panel__title {
+  font-size: 1.4rem;
+  margin-bottom: 1rem;
+  font-weight: 700;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.8rem;
+}
+
+.stats-card {
+  background: #2a2a2a;
+  padding: 0.8rem;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.stats-label {
+  display: block;
+  font-size: 1.1rem;
+  opacity: 0.7;
+  margin-bottom: 0.3rem;
+}
+
+.stats-value {
+  font-size: 1.3rem;
+  font-weight: 700;
+}
+
+/*Filter Section*/
+.filter-panel {
+  display: flex;
+  gap: 8px;
+  padding: 10px 0;
+  margin-bottom: 12px;
+}
+
+.filter-btn {
+  flex: 1;
+  padding: 8px 10px;
+  border: none;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  background-color: #2b2b2b;
+  color: #fff;
+  transition: all 0.2s ease;
+}
+
+.filter-btn:hover {
+  background-color: #3a3a3a;
+  transform: translateY(-1px);
+}
+
+.filter-btn:active {
+  transform: translateY(0);
+}
+
+.filter-btn[data-filter='all'] {
+  background-color: #444;
+}
+
+.filter-btn[data-filter='running'] {
+  background-color: #00c46a;
+}
+
+.filter-btn[data-filter='cycling'] {
+  background-color: #ffb545;
+}
+
+.filter-btn.active {
+  outline: 2px solid #fff;
+  transform: scale(1.05);
+}
+
+/*Modal For Edit and Create Workout*/
+/* =========================
+   OVERLAY (shared)
+========================= */
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  z-index: 1000;
+}
+
+/* =========================
+   BASE MODAL (shared look)
+========================= */
+.modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  width: 45rem;
+  max-width: 95%;
+
+  max-height: 90vh;
+  overflow-y: auto;
+
+  background: var(--color-dark--1);
+  color: var(--color-light--2);
+
+  border-radius: 12px;
+  padding: 3rem;
+
+  box-shadow: 0 2rem 6rem rgba(0, 0, 0, 0.5);
+  z-index: 1100;
+}
+
+/* modal hidden */
+.hidden {
+  display: none !important;
+}
+
+/* =========================
+   CLOSE BUTTON (shared)
+========================= */
+.close-modal {
+  position: absolute;
+  top: 1rem;
+  right: 1.5rem;
+
+  font-size: 2.2rem;
+  color: var(--color-light--1);
+
+  background: none;
+  border: none;
+  cursor: pointer;
+
+  transition: color 0.2s;
+}
+
+.close-modal:hover {
+  color: var(--color-light--2);
+}
+
+/* =========================
+   TITLES
+========================= */
+.modal-title {
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin-bottom: 1.8rem;
+}
+
+/* =========================
+   FORM INSIDE MODAL
+========================= */
+.form--modal {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+/* override conflict with sidebar form */
+.modal .form__row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.modal .form__label {
+  font-size: 1.2rem;
+  color: var(--color-light--1);
+}
+
+.modal .form__input {
+  padding: 1rem 1.2rem;
+  border-radius: 8px;
+  border: 1px solid var(--color-dark--2);
+
+  background: var(--color-dark--2);
+  color: var(--color-light--2);
+
+  font-size: 1.4rem;
+}
+
+.modal .form__input:focus {
+  outline: none;
+  border-color: var(--color-brand--2);
+}
+
+/* hide cadence/elevation rows */
+.modal .form__row--hidden {
+  display: none !important;
+}
+
+/* =========================
+   BUTTON (shared)
+========================= */
+.form__btn {
+  margin-top: 1rem;
+  padding: 1rem;
+
+  border: none;
+  border-radius: 8px;
+
+  background: var(--color-brand--2);
+  color: #111;
+
+  font-weight: 700;
+  cursor: pointer;
+
+  transition: transform 0.15s ease;
+}
+
+.form__btn:hover {
+  transform: translateY(-2px);
+}
+
+/* =========================
+   CONFIRM MODAL BUTTONS
+========================= */
+.modal-btns {
+  margin-top: 2rem;
+  display: flex;
+  gap: 1rem;
+}
+
+.btn-modal {
+  flex: 1;
+  padding: 1rem;
+
+  border: none;
+  border-radius: 8px;
+
+  font-weight: 700;
+  cursor: pointer;
+
+  transition: all 0.2s ease;
+}
+
+.btn-modal.btn-confirm {
+  background: var(--color-brand--2);
+  color: #111;
+}
+
+.btn-modal.btn-cancel {
+  background: #e74c3c;
+  color: #fff;
+}
+
+.btn-modal:hover {
+  transform: translateY(-2px);
+}
+
+/*GROUP WORKOUT BY DATE*/
+.workout-date-group {
+  list-style: none;
+  margin: 1rem 0 0.5rem;
+}
+
+.workout-date-title {
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: #666;
+  padding-left: 1rem;
+}
+
+/*Colpase*/
+.workout-date-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  padding: 0.5rem 1rem;
+}
+
+.btn-toggle-group {
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+}
+
+.workout-group-list {
+  list-style: none;
+  padding-left: 1rem;
+}
+
+.toggle-icon {
+  font-size: 2.5em;
+  color: white;
+}
+
+/* =========================
+   TOOLS WRAPPER
+========================= */
+
+.dropdown-menu {
+  position: absolute;
+  top: calc(100% + 0.5rem);
+  left: 0;
+
+  width: 18rem;
+
+  background: var(--color-dark--1);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 10px;
+
+  padding: 0.6rem;
+
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+
+  z-index: 1001;
+
+  box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.35);
+}
+
+.dropdown-menu.hidden {
+  display: none;
+}
+
+@keyframes dropdownIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.dropdown-option {
+  background: transparent;
+  border: none;
+
+  color: var(--color-light--2);
+  font-size: 1.3rem;
+
+  text-align: left;
+
+  padding: 0.9rem 1rem;
+  border-radius: 8px;
+
+  cursor: pointer;
+
+  transition: all 0.2s ease;
+}
+
+.dropdown-option:hover {
+  background: var(--color-dark--2);
+  transform: translateX(3px);
+}
+
+.dropdown-option + .dropdown-option {
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+[data-theme='dark'] {
+  --color-bg: #1e1e1e;
+  --color-panel: #2d3439;
+  --color-text: #ececec;
+}
+
+/*App mode indicator*/
+.app-mode-indicator {
+  position: fixed;
+  top: 1rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 5000;
+
+  padding: 0.6rem 1.2rem;
+  border-radius: 20px;
+
+  font-size: 1.2rem;
+  font-weight: 600;
+
+  background: rgba(0, 0, 0, 0.75);
+  color: white;
+}
+
+.app-mode-indicator.draw {
+  background: #111;
+  border: 1px solid #00c46a;
+}
+
+.app-mode-indicator.edit {
+  background: #111;
+  border: 1px solid #ffb545;
+}
+
+.drawing-mode {
+  cursor: crosshair;
+}
+
+.app-mode-indicator.draw::before {
+  content: '🖊️ ';
+}
+
+.app-mode-indicator.edit::before {
+  content: '✏️ ';
+}
+
+.action-btn {
+  padding: 0.8rem 1.2rem;
+  border: none;
+  border-radius: 8px;
+  background: var(--color-dark--2);
+  color: var(--color-light--2);
+  cursor: pointer;
+}
+
+.list-actions {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  align-items: center;
+  position: relative;
+  z-index: 1000;
 }
