@@ -19,6 +19,7 @@ https://ricardomartins07.github.io/StrideMap/index.html
 
 ## 📸 Preview
 
+![Workflow](assets/screenshots/StrideMap.gif)
 
 ### Main Interface
 ![Main View](assets/screenshots/main.png)
