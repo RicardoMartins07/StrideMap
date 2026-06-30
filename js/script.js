@@ -40,6 +40,7 @@ const btnImport = document.querySelector('.btn-import');
 const btnTools = document.querySelector('.btn-tools');
 const toolsMenu = document.querySelector('.tools-menu');
 const fileInput = document.querySelector('.import-input');
+const mapLoader = document.getElementById('map-loader');
 
 class Workout {
   id = crypto.randomUUID();
@@ -264,7 +265,10 @@ class App {
     // GeoLocation API
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(this._loadMap.bind(this), () =>
-        this._showNotification('Could Not get your location...', 'error'),
+        this._showNotification(
+          'Could Not get your location... Check your settings!',
+          'error',
+        ),
       );
     }
   }
@@ -274,12 +278,25 @@ class App {
     const { longitude } = position.coords;
     const coords = [latitude, longitude];
 
-    //Leaflet for Maps OPEN-SOURCE LIBRARY
+    // 🟡 MOSTRA loader quando o mapa começa a carregar
+    mapLoader.classList.remove('hidden');
+
     this.#map = L.map('map').setView(coords, 15);
-    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution:
-        '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-    }).addTo(this.#map);
+
+    const tileLayer = L.tileLayer(
+      'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+      {
+        attribution:
+          '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+      },
+    );
+
+    tileLayer.addTo(this.#map);
+
+    tileLayer.on('load', () => {
+      mapLoader.classList.add('hidden');
+    });
+
     this.#map.on('click', this._showForm.bind(this));
     this.#map.on('click', this._drawRoute.bind(this));
     this.#map.on('click', () => {

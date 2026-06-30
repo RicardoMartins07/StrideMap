@@ -223,12 +223,6 @@ a:visited {
   border-left: 5px solid var(--color-brand--1);
 }
 
-.list-actions {
-  display: flex;
-  gap: 1rem;
-  margin-bottom: 1.5rem;
-}
-
 .workout__title {
   grid-column: 1 / -1;
 
@@ -916,4 +910,64 @@ a:visited {
   align-items: center;
   position: relative;
   z-index: 1000;
+}
+
+/*MAP LOADER*/
+.map-loader {
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.85);
+  z-index: 9999;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  font-family: 'Manrope', sans-serif;
+}
+
+.spinner {
+  width: 45px;
+  height: 45px;
+  border: 4px solid #ddd;
+  border-top: 4px solid #333;
+  border-radius: 50%;
+  animation: spin 0.9s linear infinite;
+  margin-bottom: 12px;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.map-container {
+  position: relative;
+  flex: 1;
+}
+
+#map {
+  width: 100%;
+  height: 100%;
+}
+
+.map-loader {
+  position: absolute;
+  inset: 0;
+  z-index: 999;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  background: rgba(255, 255, 255, 0.85);
+}
+
+.map-loader.hidden {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
 }
