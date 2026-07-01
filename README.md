@@ -1,4 +1,4 @@
-# 🏃‍♂️ Workout Tracker
+#  StrideMap
 
 ![JavaScript](https://img.shields.io/badge/JavaScript-ES6+-yellow)
 ![Leaflet](https://img.shields.io/badge/Leaflet.js-Map-green)
@@ -10,14 +10,14 @@ This project was developed as a **portfolio application** to deepen my understan
 
 ---
 
-## 🎥 Live Demo
+## Live Demo
 
 https://ricardomartins07.github.io/StrideMap/index.html
 
 
 ---
 
-## 📸 Preview
+## Preview
 
 ![Workflow](assets/screenshots/StrideMap.gif)
 
@@ -32,37 +32,37 @@ https://ricardomartins07.github.io/StrideMap/index.html
 
 ---
 
-## ✨ Features
+## Features
 
-### 🗺️ Map & Workouts
+### Map & Workouts
 - Add workouts by clicking on the map
-- Running 🏃‍♂️ and Cycling 🚴 workouts
+- Running and Cycling workouts
 - Interactive map powered by Leaflet
 - Auto-generated workout descriptions
 - Select and focus workouts on the map
 
-### ✏️ Management
+### Management
 - Edit existing workouts
 - Delete individual or all workouts
 - Confirmation modals for destructive actions
 
-### 🧭 Route Drawing
+### Route Drawing
 - Draw custom workout routes directly on the map
 - Save drawn routes with workouts
 - Cancel or finish drawing mode
 
-### 📊 Data & Analytics
+### Data & Analytics
 - Total distance, duration, and average speed
 - Group workouts by date
 - Filter by workout type
 - Sort by distance, duration, or date
 
-### 💾 Persistence & Data
+### Persistence & Data
 - LocalStorage persistence
 - Export workouts as JSON file
 - Import workouts from JSON
 
-### 🎨 UX & UI
+### UX & UI
 - Toast notifications system
 - Modal confirmation dialogs
 - Multiple UI modes (Normal / Draw / Edit)
@@ -70,7 +70,7 @@ https://ricardomartins07.github.io/StrideMap/index.html
 
 ---
 
-## 🧠 Why I Built This
+## Why I Built This
 
 The goal of this project was to move beyond simple DOM manipulation and build a real-world single-page application with a structured architecture, state management, and persistent data handling — using only Vanilla JavaScript.
 
@@ -84,7 +84,7 @@ I focused on:
 
 ---
 
-## 🏗️ Architecture Overview
+## Architecture Overview
 ```md
 
 
@@ -112,7 +112,7 @@ I focused on:
 
 ---
 
-## 🔄 Application Flow
+## Application Flow
 User interacts with the map
 ↓
 Workout or route is created
@@ -126,7 +126,7 @@ Data saved to LocalStorage
 
 ---
 
-## 📁 Project Structure
+## Project Structure
 ```
 StrideMap/
 │
@@ -147,7 +147,7 @@ StrideMap/
 
 ---
 
-## 🚧 Challenges
+## Challenges
 
 One of the biggest challenges was managing multiple UI states (Normal, Draw, Edit) while keeping the application predictable and maintainable.
 
@@ -167,7 +167,7 @@ Another challenge was synchronizing multiple layers of the application:
 
 ---
 
-## 🔮 Future Improvements
+## Future Improvements
 
 - Refactor into ES Modules (cleaner architecture)
 - Backend integration (Node.js / Firebase)
@@ -179,7 +179,7 @@ Another challenge was synchronizing multiple layers of the application:
 
 ---
 
-## ⚙️ How to Run
+## How to Run
 
 ```bash
 git clone https://github.com/RicardoMartins07/StrideMap.git
@@ -188,7 +188,7 @@ open index.html
 ```
 ---
 
-## 🧰 Tech Stack
+## Tech Stack
 - HTML5
 - CSS3
 - Vanilla JavaScript (ES6+)
