@@ -278,7 +278,6 @@ class App {
     const { longitude } = position.coords;
     const coords = [latitude, longitude];
 
-    // 🟡 MOSTRA loader quando o mapa começa a carregar
     mapLoader.classList.remove('hidden');
 
     this.#map = L.map('map').setView(coords, 15);
@@ -487,6 +486,11 @@ class App {
   _renderWorkoutMarker(workout) {
     //Display Marker
 
+    const activityIcon =
+      workout.type === 'running'
+        ? '<i class="fa-solid fa-person-running icon-running"></i>'
+        : '<i class="fa-solid fa-person-biking icon-cycling"></i>';
+
     const marker = L.marker(workout.coords)
       .addTo(this.#map)
       .bindPopup(
@@ -498,9 +502,7 @@ class App {
           className: `${workout.type}-popup`,
         }),
       )
-      .setPopupContent(
-        `${workout.type === 'running' ? '🏃‍♂️' : '🚴‍♀️'} ${workout.description}`,
-      )
+      .setPopupContent(`${activityIcon} ${workout.description}`)
       .openPopup();
 
     this.#markers.set(workout.id, marker);
@@ -1055,38 +1057,61 @@ class App {
   }
 
   _createWorkoutHTML(workout) {
-    let html = `<li class="workout workout--${workout.type}" data-id="${workout.id}">
-    <h2 class="workout__title">
-      ${workout.type === 'running' ? '🏃‍♂️' : '🚴‍♀️'}${workout.description}
-      <span class="workout__actions">
-        <button class="workout__btn workout__btn--edit">Edit</button>
-        <button class="workout__btn workout__btn--delete">Delete</button>
-      </span>
-    </h2>
+    const activityIcon =
+      workout.type === 'running'
+        ? '<i class="fa-solid fa-person-running icon-running"></i>'
+        : '<i class="fa-solid fa-person-biking icon-cycling"></i>';
 
-    <div class="workout__details">
-      <span class="workout__icon">${workout.type === 'running' ? '🏃‍♂️' : '🚴‍♀️'}</span>
-      <span class="workout__value">${workout.distance}</span>
-      <span class="workout__unit">km</span>
-    </div>
+    let html = `
+    <li class="workout workout--${workout.type}" data-id="${workout.id}">
+      <h2 class="workout__title">
+        <span class="workout__heading">
+          ${activityIcon}
+          ${workout.description}
+        </span>
 
-    <div class="workout__details">
-      <span class="workout__icon">⏱</span>
-      <span class="workout__value">${workout.duration}</span>
-      <span class="workout__unit">min</span>
-    </div>
+        <span class="workout__actions">
+          <button class="workout__btn workout__btn--edit">
+            <i class="fa-solid fa-pen"></i>
+          </button>
+
+          <button class="workout__btn workout__btn--delete">
+            <i class="fa-solid fa-trash"></i>
+          </button>
+        </span>
+      </h2>
+
+      <div class="workout__details">
+        <span class="workout__icon">
+          <i class="fa-solid fa-road"></i>
+        </span>
+        <span class="workout__value">${workout.distance}</span>
+        <span class="workout__unit">km</span>
+      </div>
+
+      <div class="workout__details">
+        <span class="workout__icon">
+          <i class="fa-regular fa-clock"></i>
+        </span>
+        <span class="workout__value">${workout.duration}</span>
+        <span class="workout__unit">min</span>
+      </div>
   `;
 
     if (workout.type === 'running') {
       html += `
       <div class="workout__details">
-        <span class="workout__icon">⚡️</span>
+        <span class="workout__icon">
+          <i class="fa-solid fa-gauge-high"></i>
+        </span>
         <span class="workout__value">${workout.pace.toFixed(1)}</span>
         <span class="workout__unit">min/km</span>
       </div>
 
       <div class="workout__details">
-        <span class="workout__icon">🦶🏼</span>
+        <span class="workout__icon">
+          <i class="fa-solid fa-shoe-prints"></i>
+        </span>
         <span class="workout__value">${workout.cadence}</span>
         <span class="workout__unit">spm</span>
       </div>
@@ -1096,13 +1121,17 @@ class App {
     if (workout.type === 'cycling') {
       html += `
       <div class="workout__details">
-        <span class="workout__icon">⚡️</span>
+        <span class="workout__icon">
+          <i class="fa-solid fa-gauge-high"></i>
+        </span>
         <span class="workout__value">${workout.speed.toFixed(1)}</span>
         <span class="workout__unit">km/h</span>
       </div>
 
       <div class="workout__details">
-        <span class="workout__icon">⛰</span>
+        <span class="workout__icon">
+          <i class="fa-solid fa-mountain"></i>
+        </span>
         <span class="workout__value">${workout.elevationGain}</span>
         <span class="workout__unit">m</span>
       </div>
@@ -1110,6 +1139,7 @@ class App {
     }
 
     html += `</li>`;
+
     return html;
   }
 
